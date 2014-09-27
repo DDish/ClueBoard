@@ -3,6 +3,8 @@ package clueGame;
 public abstract class BoardCell {
 	private int row;
 	private int column;
+	BoardCell() {
+	}
 	public boolean isWalkway() {
 		return false;
 	}

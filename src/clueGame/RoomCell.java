@@ -1,14 +1,23 @@
 package clueGame;
 
 public class RoomCell extends BoardCell {
-	private enum DoorDirection {
+	public enum DoorDirection {
 		UP, DOWN, LEFT, RIGHT, NONE
 	}
 	private DoorDirection doorDirection;
 	private char roomInitial;
+	RoomCell() {
+		super();	
+	}
 	public boolean isRoom() {
 		return true;
 	}
-	/*public void draw(){
+	public char getInitial() {
+		return roomInitial;
+	}
+	public DoorDirection getDoorDirection() {
+		return doorDirection;
+	}
+	/*public void draw() {
 	}*/
 }
