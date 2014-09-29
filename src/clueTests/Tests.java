@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import java.io.FileNotFoundException;
 import java.util.Map;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import clueGame.BadConfigFormatException;
@@ -18,8 +19,7 @@ public class Tests {
 	public static final int NUM_ROWS = 25;
 	public static final int NUM_COLS = 25;
 	
-	@BeforeClass
-	public static void setup() {
+	@Before public void setup() {
 		ClueGame game = new ClueGame("ClueLayout.csv","ClueLegend.csv");
 		try {
 			game.loadConfigFiles();
@@ -122,7 +122,6 @@ public class Tests {
 	public void testBadColumns() throws BadConfigFormatException, FileNotFoundException {
 		ClueGame game = new ClueGame("ClueLayoutBadColumns.csv", "ClueLegend.csv");
 		game.loadConfigFiles();
-		game.getBoard().loadBoardConfig();
 	}
 	
 	// Tests for exception if layout has unrecognizable room.
@@ -130,7 +129,6 @@ public class Tests {
 	public void testBadRoom() throws BadConfigFormatException, FileNotFoundException {
 		ClueGame game = new ClueGame("ClueLayout.csv","ClueLegend.csv");
 		game.loadConfigFiles();
-		game.getBoard().loadBoardConfig();
 	}
 	
 	// Tests for exception if legend file is unusable.
@@ -138,7 +136,6 @@ public class Tests {
 	public void testBadRoomFormat() throws BadConfigFormatException, FileNotFoundException {
 		ClueGame game = new ClueGame("ClueLayout.csv","ClueLegendBadFormat.csv");
 		game.loadConfigFiles();
-		game.getBoard().loadBoardConfig();
 	}
 }
 

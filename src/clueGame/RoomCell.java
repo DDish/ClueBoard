@@ -6,9 +6,20 @@ public class RoomCell extends BoardCell {
 	}
 	private DoorDirection doorDirection;
 	private char roomInitial;
-	RoomCell() {
-		super();	
+	//constructor for rooms with door
+	public RoomCell(int R, int C, Character roomInit, Character dir) {
+		super(R, C);
+		roomInitial = roomInit;
+		//handle door direction
+
 	}
+	
+	public RoomCell(int R, int C, Character roomInit) {
+		super(R, C);
+		roomInitial = roomInit;
+		doorDirection = DoorDirection.NONE;
+	}
+	
 	public boolean isRoom() {
 		return true;
 	}
