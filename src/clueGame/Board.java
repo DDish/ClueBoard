@@ -23,30 +23,35 @@ public class Board {
 			Scanner scan = new Scanner(reader);
 			String temp;
 			Character tempDir;
-			scan.useDelimiter(",");
 			
-			//first get each token from layout config
+			//first read line by line and split by ,'s
+			temp = scan.nextLine();
 			for( int i = 0; i < numRows; i++ ) {
+				String[] tempLine = temp.split(",");
 				for( int j = 0; j < numColumns; j++ ) {
-					temp = scan.next();
-					
+	
 					//next check if this is a doorway in a room and handle
-					if( temp.length() > 1 ) {
-						tempDir = temp.charAt(1);
-						layout[i][j] = new RoomCell(i, j, temp.charAt(0), tempDir);
+					if( tempLine[j].length() > 1 ) {
+						tempDir = tempLine[j].charAt(1);
+						layout[i][j] = new RoomCell(i, j, tempLine[j].charAt(0), tempDir);
 					}
 					
 					//if it is a walkway/hallway...
-					if( temp.equalsIgnoreCase("h")) {
+					if( tempLine[j].equalsIgnoreCase("h")) {
 						layout[i][j] = new WalkwayCell(i, j);
 					}
 					
 					//if not these, it must be a room without a doorway (or closet)
 					else {
-						layout[i][j] = new RoomCell(i, j, temp.charAt(0));
+						layout[i][j] = new RoomCell(i, j, tempLine[j].charAt(0));
 					}
 				}
+				//read next line if it's allowed
+				if( scan.hasNextLine() ) {
+					temp = scan.nextLine();
+				}
 			}
+			
 			scan.close();
 	}
 	

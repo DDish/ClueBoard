@@ -26,8 +26,10 @@ public class ClueGame {
 		temp = scan.next();
 		//loop to get the rest and add to rooms
 		while( scan.hasNext() ) {
-			rooms.put(temp.charAt(0), scan.next());
-			temp = scan.next();
+			rooms.put(temp.charAt(0), scan.nextLine());
+			if( scan.hasNext() ) {
+				temp = scan.next();
+			}
 		}
 		scan.close();
 	}

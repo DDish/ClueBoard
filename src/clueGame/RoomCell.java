@@ -10,7 +10,23 @@ public class RoomCell extends BoardCell {
 	public RoomCell(int R, int C, Character roomInit, Character dir) {
 		super(R, C);
 		roomInitial = roomInit;
+		
 		//handle door direction
+		if(dir.equals('U')) {
+			doorDirection = DoorDirection.UP;
+		}
+		
+		if(dir.equals('D')) {
+			doorDirection = DoorDirection.DOWN;
+		}
+		
+		if(dir.equals('R')) {
+			doorDirection = DoorDirection.RIGHT;
+		}
+		
+		if(dir.equals('L')) {
+			doorDirection = DoorDirection.LEFT;
+		}
 
 	}
 	
@@ -23,12 +39,15 @@ public class RoomCell extends BoardCell {
 	public boolean isRoom() {
 		return true;
 	}
+	
 	public char getInitial() {
 		return roomInitial;
 	}
+	
 	public DoorDirection getDoorDirection() {
 		return doorDirection;
 	}
+	
 	/*public void draw() {
 	}*/
 }
