@@ -1,12 +1,16 @@
 package clueTests;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.*;
+
 import java.io.FileNotFoundException;
+import java.util.LinkedList;
 import java.util.Map;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import clueGame.BadConfigFormatException;
 import clueGame.Board;
 import clueGame.BoardCell;
@@ -138,5 +142,67 @@ public class Tests {
 		ClueGame game = new ClueGame("ClueLayout.csv","ClueLegendBadFormat.txt");
 		game.loadConfigFiles();
 	}
+	
+	// Tests adjacency for location with only adjacent walkways.
+	@Test
+	public void testAdjacency8_6() { 
+		BoardCell cell = board.getBoardCell(8,6);
+		LinkedList<BoardCell> testList = board.getAdjList(cell);
+		Assert.assertTrue(testList.contains(board.getBoardCell(7, 6)));
+		Assert.assertTrue(testList.contains(board.getBoardCell(9, 6)));
+		Assert.assertTrue(testList.contains(board.getBoardCell(8, 5)));
+		Assert.assertTrue(testList.contains(board.getBoardCell(8, 7)));
+		Assert.assertEquals(4, testList.size());
+	}
+	
+	// Tests adjacency for cell at upper edge.
+	@Test
+	public void testAdjacency0_11() { 
+		BoardCell cell = board.getBoardCell(0,11);
+		LinkedList<BoardCell> testList = board.getAdjList(cell);
+		Assert.assertTrue(testList.contains(board.getBoardCell(0, 10)));
+		Assert.assertTrue(testList.contains(board.getBoardCell(0, 12)));
+		Assert.assertTrue(testList.contains(board.getBoardCell(1, 11)));
+		Assert.assertEquals(3, testList.size());
+	}
+	
+	// Tests adjacency for cell at right edge.
+		@Test
+		public void testAdjacency11_24() { 
+			BoardCell cell = board.getBoardCell(11,24);
+			LinkedList<BoardCell> testList = board.getAdjList(cell);
+			Assert.assertTrue(testList.contains(board.getBoardCell(11, 23)));
+			Assert.assertTrue(testList.contains(board.getBoardCell(12, 24)));
+			Assert.assertEquals(2, testList.size());
+		}
+		
+		// Tests adjacency for cell at lower edge.
+		@Test
+		public void testAdjacency24_1() { 
+			BoardCell cell = board.getBoardCell(24,1);
+			LinkedList<BoardCell> testList = board.getAdjList(cell);
+			Assert.assertTrue(testList.contains(board.getBoardCell(24, 0)));
+			Assert.assertTrue(testList.contains(board.getBoardCell(24, 2)));
+			Assert.assertTrue(testList.contains(board.getBoardCell(23, 1)));
+			Assert.assertEquals(3, testList.size());
+		}
+		// Tests adjacency for cell at left edge.
+		@Test
+		public void testAdjacency8_0() { 
+			BoardCell cell = board.getBoardCell(8,0);
+			LinkedList<BoardCell> testList = board.getAdjList(cell);
+			Assert.assertTrue(testList.contains(board.getBoardCell(8, 1)));
+			Assert.assertTrue(testList.contains(board.getBoardCell(9, 0)));
+			Assert.assertEquals(2, testList.size());
+		}
+		
+		// Tests adjacency for cell sandwiched between non-doorway room cells.
+		@Test
+		public void testAdjacency16_0() { 
+			BoardCell cell = board.getBoardCell(16,0);
+			LinkedList<BoardCell> testList = board.getAdjList(cell);
+			Assert.assertTrue(testList.contains(board.getBoardCell(16, 1)));
+			Assert.assertEquals(1, testList.size());
+		}
 }
 

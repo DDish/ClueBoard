@@ -3,6 +3,7 @@ package clueGame;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -86,6 +87,11 @@ public class Board {
 	
 	public BoardCell getBoardCell(int row, int col) {
 		return layout[row][col];
+	}
+	
+	public LinkedList<BoardCell> getAdjList(BoardCell cell) {
+		return null;
+		
 	}
 	
 	public int getNumRows() {
