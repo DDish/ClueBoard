@@ -40,6 +40,13 @@ public class RoomCell extends BoardCell {
 		return true;
 	}
 	
+	public boolean isDoorway() {
+		if( doorDirection == DoorDirection.NONE ) return false;
+		else {
+			return true;
+		}
+	}
+	
 	public char getInitial() {
 		return roomInitial;
 	}

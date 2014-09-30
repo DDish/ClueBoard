@@ -15,7 +15,7 @@ public class main {
 		Board testBoard = game.getBoard();
 		game.loadConfigFiles();
 		if(testBoard.getRoomCell(12, 6).isDoorway()) System.out.println("YEAH"); //doorways not adding properly
-		System.out.println(testBoard.getRooms().size()); //check size of getRooms... returns 0 right now :(
+		System.out.println(testBoard.getRoomCell(12, 6).getDoorDirection()); //check size of getRooms... returns 0 right now :(
 		//*/
 	}
 

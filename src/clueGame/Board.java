@@ -23,26 +23,33 @@ public class Board {
 			Scanner scan = new Scanner(reader);
 			String temp;
 			Character tempDir;
+			boolean roomMade = false;
 			
 			//first read line by line and split by ,'s
 			temp = scan.nextLine();
 			for( int i = 0; i < numRows; i++ ) {
 				String[] tempLine = temp.split(",");
+				System.out.println("__________________row line __________________");
 				for( int j = 0; j < numColumns; j++ ) {
-	
+					roomMade = false;
 					//next check if this is a doorway in a room and handle
 					if( tempLine[j].length() > 1 ) {
+						System.out.println("Doorway: " + tempLine[j].charAt(0) + "|" + tempLine[j].charAt(1));
 						tempDir = tempLine[j].charAt(1);
 						layout[i][j] = new RoomCell(i, j, tempLine[j].charAt(0), tempDir);
+						roomMade = true;
 					}
 					
 					//if it is a walkway/hallway...
 					if( tempLine[j].equalsIgnoreCase("h")) {
+						System.out.println("walkway");
 						layout[i][j] = new WalkwayCell(i, j);
+						roomMade = true;
 					}
 					
 					//if not these, it must be a room without a doorway (or closet)
-					else {
+					if( !roomMade ) {
+						System.out.println("else: " + tempLine[j].charAt(0));
 						layout[i][j] = new RoomCell(i, j, tempLine[j].charAt(0));
 					}
 				}
