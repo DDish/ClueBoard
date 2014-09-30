@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Board {
 	private BoardCell[][] layout;
@@ -93,9 +94,14 @@ public class Board {
 	}
 	
 	public LinkedList<BoardCell> getAdjList(BoardCell cell) {
-		return null;
-		
+		return null;	
 	}
+	
+	public Set<BoardCell> getTargetList() {
+		return null;
+	}
+	
+	public void calcTargets(BoardCell cell, int diceRoll) {}
 	
 	public int getNumRows() {
 		return numRows;
