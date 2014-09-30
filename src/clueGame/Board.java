@@ -29,12 +29,12 @@ public class Board {
 			temp = scan.nextLine();
 			for( int i = 0; i < numRows; i++ ) {
 				String[] tempLine = temp.split(",");
-				System.out.println("__________________row line __________________");
+				//System.out.println("__________________row line __________________");
 				for( int j = 0; j < numColumns; j++ ) {
 					roomMade = false;
 					//next check if this is a doorway in a room and handle
 					if( tempLine[j].length() > 1 ) {
-						System.out.println("Doorway: " + tempLine[j].charAt(0) + "|" + tempLine[j].charAt(1));
+						//System.out.println("Doorway: " + tempLine[j].charAt(0) + "|" + tempLine[j].charAt(1));
 						tempDir = tempLine[j].charAt(1);
 						layout[i][j] = new RoomCell(i, j, tempLine[j].charAt(0), tempDir);
 						roomMade = true;
@@ -42,14 +42,14 @@ public class Board {
 					
 					//if it is a walkway/hallway...
 					if( tempLine[j].equalsIgnoreCase("h")) {
-						System.out.println("walkway");
+						//System.out.println("walkway");
 						layout[i][j] = new WalkwayCell(i, j);
 						roomMade = true;
 					}
 					
 					//if not these, it must be a room without a doorway (or closet)
 					if( !roomMade ) {
-						System.out.println("else: " + tempLine[j].charAt(0));
+						//System.out.println("else: " + tempLine[j].charAt(0));
 						layout[i][j] = new RoomCell(i, j, tempLine[j].charAt(0));
 					}
 				}
@@ -62,7 +62,7 @@ public class Board {
 			scan.close();
 	}
 	
-	public void loadLegend(String legendFile) throws FileNotFoundException {
+	public void loadLegend(String legendFile) throws FileNotFoundException, BadConfigFormatException {
 		//setup filereader and scanner
 		FileReader reader = new FileReader(legendFile);
 		Scanner scan = new Scanner(reader);
@@ -76,7 +76,7 @@ public class Board {
 			String[] tempLine = temp.split(",");
 			rooms.put(tempLine[0].charAt(0), tempLine[1]);
 			//System.out.println("adding: " + tempLine[0].charAt(0) + " + " + tempLine[1]);
-			System.out.println("added: " + tempLine[0] + "|" + rooms.get(tempLine[0].charAt(0)));
+			//System.out.println("added: " + tempLine[0] + "|" + rooms.get(tempLine[0].charAt(0)));
 			
 		}
 		scan.close();

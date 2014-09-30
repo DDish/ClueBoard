@@ -135,7 +135,7 @@ public class Tests {
 	// Tests for exception if legend file is unusable.
 	@Test (expected = BadConfigFormatException.class)
 	public void testBadRoomFormat() throws BadConfigFormatException, FileNotFoundException {
-		ClueGame game = new ClueGame("ClueLayout.csv","ClueLegendBadFormat.csv");
+		ClueGame game = new ClueGame("ClueLayout.csv","ClueLegendBadFormat.txt");
 		game.loadConfigFiles();
 	}
 }

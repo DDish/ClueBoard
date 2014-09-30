@@ -17,10 +17,13 @@ public class ClueGame {
 	}
 	
 	public void loadConfigFiles() throws BadConfigFormatException, FileNotFoundException {
-		//first load legend
+		try {
 		board.loadLegend(legendFile);
 		//then load board layout
 		board.loadBoardConfig(layoutFile);
+		} catch (BadConfigFormatException e) {
+			throw new BadConfigFormatException();
+		}
 	}
 	public Board getBoard() {
 		return board;
