@@ -204,5 +204,62 @@ public class Tests {
 			Assert.assertTrue(testList.contains(board.getBoardCell(16, 1)));
 			Assert.assertEquals(1, testList.size());
 		}
+		
+		// Tests adjacency for cell next to non-doorway room cell.
+				@Test
+				public void testAdjacency8_17() { 
+					BoardCell cell = board.getBoardCell(8,17);
+					LinkedList<BoardCell> testList = board.getAdjList(cell);
+					Assert.assertTrue(testList.contains(board.getBoardCell(8, 16)));
+					Assert.assertTrue(testList.contains(board.getBoardCell(7, 17)));
+					Assert.assertEquals(2, testList.size());
+				}
+				
+		// Tests adjacency for cell next up-facing doorway.
+				@Test
+				public void testAdjacency1_14() { 
+					BoardCell cell = board.getBoardCell(1,14);
+					LinkedList<BoardCell> testList = board.getAdjList(cell);
+					Assert.assertTrue(testList.contains(board.getBoardCell(1, 15)));
+					Assert.assertTrue(testList.contains(board.getBoardCell(1, 13)));
+					Assert.assertTrue(testList.contains(board.getBoardCell(2, 14)));
+					Assert.assertTrue(testList.contains(board.getBoardCell(0, 14)));
+					Assert.assertEquals(4, testList.size());
+				}
+				
+		// Tests adjacency for cell next right-facing doorway.
+				@Test
+				public void testAdjacency1_5() { 
+					BoardCell cell = board.getBoardCell(1,5);
+					LinkedList<BoardCell> testList = board.getAdjList(cell);
+					Assert.assertTrue(testList.contains(board.getBoardCell(0, 5)));
+					Assert.assertTrue(testList.contains(board.getBoardCell(2, 5)));
+					Assert.assertTrue(testList.contains(board.getBoardCell(1, 6)));
+					Assert.assertTrue(testList.contains(board.getBoardCell(1, 4)));
+					Assert.assertEquals(4, testList.size());
+				}
+				
+		// Tests adjacency for cell next down-facing doorway.
+				@Test
+				public void testAdjacency11_23() { 
+					BoardCell cell = board.getBoardCell(11,23);
+					LinkedList<BoardCell> testList = board.getAdjList(cell);
+					Assert.assertTrue(testList.contains(board.getBoardCell(10, 23)));
+					Assert.assertTrue(testList.contains(board.getBoardCell(12, 23)));
+					Assert.assertTrue(testList.contains(board.getBoardCell(11, 22)));
+					Assert.assertTrue(testList.contains(board.getBoardCell(11, 24)));
+					Assert.assertEquals(4, testList.size());
+				}
+		
+		// Tests adjacency for cell next left-facing doorway.
+				@Test
+				public void testAdjacency16_22() { 
+					BoardCell cell = board.getBoardCell(16,22);
+					LinkedList<BoardCell> testList = board.getAdjList(cell);
+					Assert.assertTrue(testList.contains(board.getBoardCell(16, 23)));
+					Assert.assertTrue(testList.contains(board.getBoardCell(16, 21)));
+					Assert.assertTrue(testList.contains(board.getBoardCell(17, 22)));
+					Assert.assertEquals(3, testList.size());
+				}
 }
 
