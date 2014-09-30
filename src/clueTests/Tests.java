@@ -26,8 +26,18 @@ public class Tests {
 	
 	@Before public void setup() {
 		ClueGame game = new ClueGame("ClueLayout.csv","ClueLegend.csv");
+		ClueGame raderGame = new ClueGame("ClueLayoutRader.csv", "ClueLegendRader.txt");
 		try {
 			game.loadConfigFiles();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadConfigFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			raderGame.loadConfigFiles();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -144,7 +154,7 @@ public class Tests {
 		game.loadConfigFiles();
 	}
 	
-	// Tests adjacency for location with only adjacent walkways.
+	/*// Tests adjacency for location with only adjacent walkways.
 	@Test
 	public void testAdjacency8_6() { 
 		BoardCell cell = board.getBoardCell(8,6);
@@ -401,6 +411,6 @@ public class Tests {
 					Assert.assertTrue(targets.contains(board.getBoardCell(20, 13)));
 					Assert.assertTrue(targets.contains(board.getBoardCell(23, 14)));
 					Assert.assertTrue(targets.contains(board.getBoardCell(22, 15)));
-				}
+				}*/
 }
 

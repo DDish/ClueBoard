@@ -14,8 +14,13 @@ public class Board {
 	private int numRows;
 	private int numColumns;
 	public Board() {
-		numRows = 22;
-		numColumns = 23;
+		numRows = 25;
+		numColumns = 25;
+		layout = new BoardCell[numRows][numColumns];
+	}
+	public Board(int rows, int cols) {
+		numRows = rows;
+		numColumns = cols;
 		layout = new BoardCell[numRows][numColumns];
 	}
 	
@@ -31,7 +36,7 @@ public class Board {
 			if(temp.length() < (numColumns*2 - 1)) throw new BadConfigFormatException();
 			for( int i = 0; i < numRows; i++ ) {
 				String[] tempLine = temp.split(",");
-				System.out.println("__________________row line __________________");
+				//System.out.println("__________________row line __________________");
 				for( int j = 0; j < numColumns; j++ ) {
 					roomMade = false;
 					//next check if this is a doorway in a room and handle
@@ -81,6 +86,7 @@ public class Board {
 			}
 			if (!((temp.charAt(1))==',')) throw new BadConfigFormatException();
 			String[] tempLine = temp.split(",");
+			if (tempLine[1].contains(",")) throw new BadConfigFormatException();
 			rooms.put(tempLine[0].charAt(0), tempLine[1].trim());
 			//System.out.println("adding: " + tempLine[0].charAt(0) + " + " + tempLine[1]);
 			//System.out.println("added: " + tempLine[0] + "|" + rooms.get(tempLine[0].charAt(0)));
