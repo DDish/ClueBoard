@@ -62,6 +62,26 @@ public class Board {
 			scan.close();
 	}
 	
+	public void loadLegend(String legendFile) throws FileNotFoundException {
+		//setup filereader and scanner
+		FileReader reader = new FileReader(legendFile);
+		Scanner scan = new Scanner(reader);
+		String temp = null;
+
+		//loop through to add rooms
+		while( scan.hasNextLine() ) {
+			if( scan.hasNextLine() ) {
+				temp = scan.nextLine();
+			}
+			String[] tempLine = temp.split(",");
+			rooms.put(tempLine[0].charAt(0), tempLine[1]);
+			//System.out.println("adding: " + tempLine[0].charAt(0) + " + " + tempLine[1]);
+			System.out.println("added: " + tempLine[0] + "|" + rooms.get(tempLine[0].charAt(0)));
+			
+		}
+		scan.close();
+	}
+	
 	public BoardCell getBoardCell(int row, int col) {
 		return layout[row][col];
 	}

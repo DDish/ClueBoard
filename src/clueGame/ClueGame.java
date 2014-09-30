@@ -16,28 +16,9 @@ public class ClueGame {
 		legendFile = legend;
 	}
 	
-	public void loadLegend() throws FileNotFoundException {
-		//setup filereader and scanner
-		FileReader reader = new FileReader(legendFile);
-		Scanner scan = new Scanner(reader);
-		String temp = null;
-
-		//loop through to add rooms
-		while( scan.hasNextLine() ) {
-			if( scan.hasNextLine() ) {
-				temp = scan.nextLine();
-			}
-			String[] tempLine = temp.split(",");
-			rooms.put(tempLine[0].charAt(0), tempLine[1]);
-			System.out.println("adding: " + tempLine[0].charAt(0) + " + " + tempLine[1]);
-			
-		}
-		scan.close();
-	}
-	
 	public void loadConfigFiles() throws BadConfigFormatException, FileNotFoundException {
 		//first load legend
-		loadLegend();
+		board.loadLegend(legendFile);
 		//then load board layout
 		board.loadBoardConfig(layoutFile);
 	}
