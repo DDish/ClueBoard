@@ -26,6 +26,7 @@ public class Board {
 			boolean roomMade = false;
 			//first read line by line and split by ,'s
 			temp = scan.nextLine();
+			if(temp.length() < (numColumns*2 - 1)) throw new BadConfigFormatException();
 			for( int i = 0; i < numRows; i++ ) {
 				String[] tempLine = temp.split(",");
 				System.out.println("__________________row line __________________");
