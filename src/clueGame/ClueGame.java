@@ -20,17 +20,17 @@ public class ClueGame {
 		//setup filereader and scanner
 		FileReader reader = new FileReader(legendFile);
 		Scanner scan = new Scanner(reader);
-		String temp;
+		String temp = null;
 
-		//scan first line
-		temp = scan.nextLine();	
-		//loop to get the rest and add to rooms
+		//loop through to add rooms
 		while( scan.hasNextLine() ) {
-			String[] tempLine = temp.split(",");
-			rooms.put(tempLine[0].charAt(0), tempLine[1]);
 			if( scan.hasNextLine() ) {
 				temp = scan.nextLine();
 			}
+			String[] tempLine = temp.split(",");
+			rooms.put(tempLine[0].charAt(0), tempLine[1]);
+			System.out.println("adding: " + tempLine[0].charAt(0) + " + " + tempLine[1]);
+			
 		}
 		scan.close();
 	}
