@@ -21,14 +21,15 @@ public class ClueGame {
 		FileReader reader = new FileReader(legendFile);
 		Scanner scan = new Scanner(reader);
 		String temp;
-		scan.useDelimiter(",");
-		//scan first char
-		temp = scan.next();
+
+		//scan first line
+		temp = scan.nextLine();	
 		//loop to get the rest and add to rooms
-		while( scan.hasNext() ) {
-			rooms.put(temp.charAt(0), scan.nextLine());
-			if( scan.hasNext() ) {
-				temp = scan.next();
+		while( scan.hasNextLine() ) {
+			String[] tempLine = temp.split(",");
+			rooms.put(tempLine[0].charAt(0), tempLine[1]);
+			if( scan.hasNextLine() ) {
+				temp = scan.nextLine();
 			}
 		}
 		scan.close();
