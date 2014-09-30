@@ -12,8 +12,8 @@ public class Board {
 	private int numRows;
 	private int numColumns;
 	public Board() {
-		numRows = 25;
-		numColumns = 25;
+		numRows = 22;
+		numColumns = 23;
 		layout = new BoardCell[numRows][numColumns];
 	}
 	
@@ -35,10 +35,13 @@ public class Board {
 					//next check if this is a doorway in a room and handle
 					if(!rooms.containsKey(tempLine[j].charAt(0))) throw new BadConfigFormatException();
 					if( tempLine[j].length() > 1 ) {
-						//System.out.println("Doorway: " + tempLine[j].charAt(0) + "|" + tempLine[j].charAt(1));
-						tempDir = tempLine[j].charAt(1);
-						layout[i][j] = new RoomCell(i, j, tempLine[j].charAt(0), tempDir);
-						roomMade = true;
+						if( tempLine[j].charAt(1) == 'U' || tempLine[j].charAt(1) == 'D' || 
+							tempLine[j].charAt(1) == 'L' || tempLine[j].charAt(1) == 'R' ) {
+							//System.out.println("Doorway: " + tempLine[j].charAt(0) + "|" + tempLine[j].charAt(1));
+							tempDir = tempLine[j].charAt(1);
+							layout[i][j] = new RoomCell(i, j, tempLine[j].charAt(0), tempDir);
+							roomMade = true;
+						}
 					}
 					
 					//if it is a walkway/hallway...
@@ -76,7 +79,7 @@ public class Board {
 			}
 			if (!((temp.charAt(1))==',')) throw new BadConfigFormatException();
 			String[] tempLine = temp.split(",");
-			rooms.put(tempLine[0].charAt(0), tempLine[1]);
+			rooms.put(tempLine[0].charAt(0), tempLine[1].trim());
 			//System.out.println("adding: " + tempLine[0].charAt(0) + " + " + tempLine[1]);
 			//System.out.println("added: " + tempLine[0] + "|" + rooms.get(tempLine[0].charAt(0)));
 			
