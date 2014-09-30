@@ -128,7 +128,7 @@ public class Tests {
 	// Tests for exception if layout has unrecognizable room.
 	@Test (expected = BadConfigFormatException.class)
 	public void testBadRoom() throws BadConfigFormatException, FileNotFoundException {
-		ClueGame game = new ClueGame("ClueLayout.csv","ClueLegend.csv");
+		ClueGame game = new ClueGame("ClueLayoutBadRoom.txt","ClueLegend.csv");
 		game.loadConfigFiles();
 	}
 	

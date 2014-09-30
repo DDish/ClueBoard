@@ -24,15 +24,15 @@ public class Board {
 			String temp;
 			Character tempDir;
 			boolean roomMade = false;
-			
 			//first read line by line and split by ,'s
 			temp = scan.nextLine();
 			for( int i = 0; i < numRows; i++ ) {
 				String[] tempLine = temp.split(",");
-				//System.out.println("__________________row line __________________");
+				System.out.println("__________________row line __________________");
 				for( int j = 0; j < numColumns; j++ ) {
 					roomMade = false;
 					//next check if this is a doorway in a room and handle
+					if(!rooms.containsKey(tempLine[j].charAt(0))) throw new BadConfigFormatException();
 					if( tempLine[j].length() > 1 ) {
 						//System.out.println("Doorway: " + tempLine[j].charAt(0) + "|" + tempLine[j].charAt(1));
 						tempDir = tempLine[j].charAt(1);
@@ -73,6 +73,7 @@ public class Board {
 			if( scan.hasNextLine() ) {
 				temp = scan.nextLine();
 			}
+			if (!((temp.charAt(1))==',')) throw new BadConfigFormatException();
 			String[] tempLine = temp.split(",");
 			rooms.put(tempLine[0].charAt(0), tempLine[1]);
 			//System.out.println("adding: " + tempLine[0].charAt(0) + " + " + tempLine[1]);
