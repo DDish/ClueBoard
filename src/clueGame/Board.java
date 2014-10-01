@@ -55,14 +55,16 @@ public class Board {
 							//System.out.println("Doorway: " + tempLine[j].charAt(0) + "|" + tempLine[j].charAt(1));
 							tempDir = tempLine[j].charAt(1);
 							layout[i][j] = new RoomCell(i, j, tempLine[j].charAt(0), tempDir);
+							System.out.println("doorway" + layout[i][j].toString());
 							roomMade = true;
 						}
 					}
 					
 					//if it is a walkway/hallway...
 					if( tempLine[j].equalsIgnoreCase("h") ) {
-						//System.out.println("walkway");
+						
 						layout[i][j] = new WalkwayCell(i, j);
+						System.out.println("walkway" + layout[i][j].toString());
 						roomMade = true;
 					}
 					
@@ -70,6 +72,7 @@ public class Board {
 					if( !roomMade ) {
 						//System.out.println("else: " + tempLine[j].charAt(0));
 						layout[i][j] = new RoomCell(i, j, tempLine[j].charAt(0));
+						System.out.println("room" + layout[i][j].toString());
 					}
 				}
 				//read next line if it's allowed
@@ -115,12 +118,13 @@ public class Board {
 					if (j!=0) if(getBoardCell(i, j-1).isWalkway() || getBoardCell(i, j-1).isDoorway()) adjacents.add(getBoardCell(i,j-1));
 					adjLists.put(getBoardCell(i,j), adjacents);
 				}
-				//if doorway, two adjacencies may exist
+				//if doorway, only one adjacency exists
 				if( getBoardCell(i, j).isDoorway() ) {
-					if (i!=numRows-1) if(getRoomCell(i, j).getDoorDirection() == DoorDirection.UP) adjacents.add(getBoardCell(i+1,j));
+					if (i!=numRows-1) if(getRoomCell(i, j).getDoorDirection() == DoorDirection.DOWN) adjacents.add(getBoardCell(i+1,j));
 					if (j!=numColumns-1) if(getRoomCell(i, j).getDoorDirection() == DoorDirection.RIGHT) adjacents.add(getBoardCell(i,j+1));
-					if (i!=0) if(getRoomCell(i, j).getDoorDirection() == DoorDirection.DOWN) adjacents.add(getBoardCell(i-1,j));
+					if (i!=0) if(getRoomCell(i, j).getDoorDirection() == DoorDirection.UP) adjacents.add(getBoardCell(i-1,j));
 					if (j!=0) if(getRoomCell(i, j).getDoorDirection() == DoorDirection.LEFT) adjacents.add(getBoardCell(i,j-1));
+					
 					adjLists.put(getBoardCell(i,j), adjacents);
 				}
 			}
@@ -141,25 +145,31 @@ public class Board {
 		//get adjcells to cell
 		LinkedList<BoardCell> temp = getAdjList(cell);
 
-		for (BoardCell adj : temp) {	
-			visited.add(adj);
-			// If no more moves remain, return the potential targets.
-			if(diceRoll == 1){
-				targets.add(adj);
+		if( temp != null ) {
+			for (BoardCell adj : temp) {	
+				visited.add(adj);
+				// If no more moves remain, return the potential targets.
+				if(diceRoll == 1){
+					System.out.println("Adding: " + adj.toString() + " on account of no moves left");
+					targets.add(adj);
+				}
+				// Recursively find adjacent cells for each next cell.	Handles going to doorways with a higher roll than is needed properly.	
+				else {
+					System.out.println("recursing");
+					if( adj.isDoorway() ) {
+						targets.add(adj);
+						System.out.println("added special case: " + adj.toString());
+					}
+					findAllTargets (adj, diceRoll - 1);
+				}
+				visited.remove(adj);
 			}
-			// Recursively find adjacent cells for each next cell.	Handles going to doorways with a higher roll than is needed properly.	
-			else {
-				if( adj.isDoorway() && diceRoll > 0 ) targets.add(adj);
-				findAllTargets (adj, diceRoll - 1);
-			}
-			visited.remove(adj);
 		}
 
 	}
 
 	public Set<BoardCell> getTargets() {
 		targets.remove(startingPoint);
-		targets.remove(visited);
 		return targets;
 		
 	}
