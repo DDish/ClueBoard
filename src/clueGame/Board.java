@@ -3,21 +3,29 @@ package clueGame;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+
+import clueGame.RoomCell.DoorDirection;
 
 public class Board {
 	private BoardCell[][] layout;
 	private Map<Character,String> rooms = new HashMap<Character,String>();
 	private int numRows;
 	private int numColumns;
+	private Map<BoardCell, LinkedList<BoardCell>> adjLists = new HashMap<>();
+	private Set<BoardCell> targets = new HashSet<BoardCell>();
+	private Set<BoardCell> visited = new HashSet<BoardCell>();
+	private BoardCell startingPoint  = null;
 	public Board() {
 		numRows = 25;
 		numColumns = 25;
 		layout = new BoardCell[numRows][numColumns];
 	}
+	
 	public Board(int rows, int cols) {
 		numRows = rows;
 		numColumns = cols;
@@ -52,7 +60,7 @@ public class Board {
 					}
 					
 					//if it is a walkway/hallway...
-					if( tempLine[j].equalsIgnoreCase("h")) {
+					if( tempLine[j].equalsIgnoreCase("h") ) {
 						//System.out.println("walkway");
 						layout[i][j] = new WalkwayCell(i, j);
 						roomMade = true;
@@ -95,19 +103,80 @@ public class Board {
 		scan.close();
 	}
 	
+	public void calcAdjacencies() {
+		for(int i = 0; i < numRows; i++) {
+			for(int j = 0; j < numColumns; j++) {
+				LinkedList<BoardCell> adjacents = new LinkedList<BoardCell>();
+				//first ensure we are checking a doorway or walkway to start from
+				if( getBoardCell(i, j).isWalkway() ) {
+					if (i!=numRows-1) if(getBoardCell(i+1, j).isWalkway() || getBoardCell(i+1, j).isDoorway()) adjacents.add(getBoardCell(i+1,j));
+					if (j!=numColumns-1) if(getBoardCell(i, j+1).isWalkway() || getBoardCell(i, j+1).isDoorway()) adjacents.add(getBoardCell(i,j+1));
+					if (i!=0) if(getBoardCell(i-1, j).isWalkway() || getBoardCell(i-1, j).isDoorway()) adjacents.add(getBoardCell(i-1,j));
+					if (j!=0) if(getBoardCell(i, j-1).isWalkway() || getBoardCell(i, j-1).isDoorway()) adjacents.add(getBoardCell(i,j-1));
+					adjLists.put(getBoardCell(i,j), adjacents);
+				}
+				//if doorway, two adjacencies may exist
+				if( getBoardCell(i, j).isDoorway() ) {
+					if (i!=numRows-1) if(getRoomCell(i, j).getDoorDirection() == DoorDirection.UP) adjacents.add(getBoardCell(i+1,j));
+					if (j!=numColumns-1) if(getRoomCell(i, j).getDoorDirection() == DoorDirection.RIGHT) adjacents.add(getBoardCell(i,j+1));
+					if (i!=0) if(getRoomCell(i, j).getDoorDirection() == DoorDirection.DOWN) adjacents.add(getBoardCell(i-1,j));
+					if (j!=0) if(getRoomCell(i, j).getDoorDirection() == DoorDirection.LEFT) adjacents.add(getBoardCell(i,j-1));
+					adjLists.put(getBoardCell(i,j), adjacents);
+				}
+			}
+		}
+	}
+	
+	public void calcTargets(BoardCell cell, int diceRoll) {
+		startingPoint = cell;
+		findAllTargets(cell, diceRoll);
+	}
+	
+	public void calcTargets(int i, int j, int diceRoll) {
+		startingPoint = getBoardCell(i, j);
+		findAllTargets(startingPoint, diceRoll);
+	}
+	
+	public void findAllTargets(BoardCell cell, int diceRoll) {
+		//get adjcells to cell
+		LinkedList<BoardCell> temp = getAdjList(cell);
+
+		for (BoardCell adj : temp) {	
+			visited.add(adj);
+			// If no more moves remain, return the potential targets.
+			if(diceRoll == 1){
+				targets.add(adj);
+			}
+			// Recursively find adjacent cells for each next cell.	Handles going to doorways with a higher roll than is needed properly.	
+			else {
+				if( adj.isDoorway() && diceRoll > 0 ) targets.add(adj);
+				findAllTargets (adj, diceRoll - 1);
+			}
+			visited.remove(adj);
+		}
+
+	}
+
+	public Set<BoardCell> getTargets() {
+		targets.remove(startingPoint);
+		targets.remove(visited);
+		return targets;
+		
+	}
+	
+	public LinkedList<BoardCell> getAdjList(BoardCell cell) {
+		return adjLists.get(cell);
+	}
+	
+	public LinkedList<BoardCell> getAdjList(int i, int j) {
+		return adjLists.get(getBoardCell(i, j));
+	}
+	
+	
 	public BoardCell getBoardCell(int row, int col) {
 		return layout[row][col];
 	}
 	
-	public LinkedList<BoardCell> getAdjList(BoardCell cell) {
-		return null;	
-	}
-	
-	public Set<BoardCell> getTargetList() {
-		return null;
-	}
-	
-	public void calcTargets(BoardCell cell, int diceRoll) {}
 	
 	public int getNumRows() {
 		return numRows;

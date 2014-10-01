@@ -4,6 +4,11 @@ public abstract class BoardCell {
 	private int row;
 	private int column;
 	
+	@Override
+	public String toString() {
+		return "BoardCell [row=" + row + ", column=" + column + "]";
+	}
+	
 	public BoardCell(int R, int C) {
 		row = R;
 		column = C;

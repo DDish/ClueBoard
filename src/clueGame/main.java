@@ -1,6 +1,7 @@
 package clueGame;
 
 import java.io.FileNotFoundException;
+import java.util.LinkedList;
 
 public class main {
 
@@ -18,9 +19,11 @@ public class main {
 		} catch (BadConfigFormatException e) {
 			throw new BadConfigFormatException();
 		}
-		if(testBoard.getRoomCell(12, 6).isDoorway()) System.out.println("YEAH");
-		//System.out.println(testBoard.getRoomCell(12, 6).getDoorDirection()); //check size of getRooms... returns 0 right now :(
-		//*/
+		
+		testBoard.calcAdjacencies();
+		
+		testBoard.calcTargets(testBoard.getBoardCell(10, 23), 3);
+		
 	}
 
 }
