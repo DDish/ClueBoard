@@ -398,5 +398,24 @@ public class Tests {
 					Assert.assertTrue(targets.contains(board.getBoardCell(22, 15)));
 					Assert.assertTrue(targets.contains(board.getBoardCell(24, 12)));
 				}//*/
+				
+		// Tests target list from doorway, dice roll of 4.		
+				@Test
+				public void testTargets3_3() {
+					BoardCell cell = board.getBoardCell(3, 3);
+					board.calcTargets(cell, 4);
+					Set targets = board.getTargets();
+					Assert.assertEquals(0, targets.size());
+				}
+				
+		// Tests target list from doorway, dice roll of 2.		
+				@Test
+				public void testTargets24_24() {
+					BoardCell cell = board.getBoardCell(24, 24);
+					board.calcTargets(cell, 2);
+					Set targets = board.getTargets();
+					Assert.assertEquals(0, targets.size());
+				}
+				
 }
 
