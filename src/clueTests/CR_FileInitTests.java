@@ -28,10 +28,11 @@ public class CR_FileInitTests {
 	
 	@BeforeClass
 	public static void setUp() throws FileNotFoundException, BadConfigFormatException {
-		ClueGame game = new ClueGame("ClueLayoutRader.csv", "ClueLegendRader.txt",NUM_ROWS,NUM_COLUMNS);
+		ClueGame game = new ClueGame("ClueLayoutRader.csv", "ClueLegendRader.txt");
 		game.loadConfigFiles();
 		board = game.getBoard();
 	}
+	
 	@Test
 	public void testRooms() {
 		Map<Character, String> rooms = board.getRooms();

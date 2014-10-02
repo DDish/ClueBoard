@@ -16,25 +16,26 @@ public class ClueGame {
 	public ClueGame(String layout, String legend) {
 		layoutFile = layout;
 		legendFile = legend;
-		board = new Board();
-	}
-	public ClueGame(String layout, String legend, int boardRow, int boardCol) {
-		layoutFile = layout;
-		legendFile = legend;
-		boardRows = boardRow;
-		boardCols = boardCol;
-		board = new Board(boardRows, boardCols);
+		try {
+			board = new Board(layoutFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadConfigFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
-	public void loadConfigFiles() throws BadConfigFormatException, FileNotFoundException {
-		try {
+	public void loadConfigFiles() throws FileNotFoundException, BadConfigFormatException {
 		board.loadLegend(legendFile);
 		//then load board layout
+		board.loadBoardDimensions(layoutFile);
 		board.loadBoardConfig(layoutFile);
-		} catch (BadConfigFormatException e) {
-			throw new BadConfigFormatException();
-		}
+		
 	}
+	
 	public Board getBoard() {
 		return board;
 	}

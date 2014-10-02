@@ -1,5 +1,6 @@
 package clueTests;
 
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -7,6 +8,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import clueGame.BadConfigFormatException;
 import clueGame.Board;
 import clueGame.BoardCell;
 import clueGame.ClueGame;
@@ -14,8 +16,8 @@ import clueGame.ClueGame;
 public class CR_BoardAdjTargetTests {
 	private static Board board;
 	@BeforeClass
-	public static void setUp() {
-		ClueGame game = new ClueGame();
+	public static void setUp() throws FileNotFoundException, BadConfigFormatException {
+		ClueGame game = new ClueGame("ClueLayoutRader.csv", "ClueLegendRader.txt");
 		game.loadConfigFiles();
 		board = game.getBoard();
 		board.calcAdjacencies();

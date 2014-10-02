@@ -24,27 +24,9 @@ public class Tests {
 	public static final int NUM_ROWS = 25;
 	public static final int NUM_COLS = 25;
 	
-	@Before public void setup() {
+	@Before public void setup() throws FileNotFoundException, BadConfigFormatException {
 		ClueGame game = new ClueGame("ClueLayout.csv","ClueLegend.csv");
-		ClueGame raderGame = new ClueGame("ClueLayoutRader.csv", "ClueLegendRader.txt");
-		try {
-			game.loadConfigFiles();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BadConfigFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			raderGame.loadConfigFiles();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BadConfigFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		game.loadConfigFiles();
 		board = game.getBoard();
 		board.calcAdjacencies();
 	}

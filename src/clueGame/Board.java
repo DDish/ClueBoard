@@ -20,20 +20,36 @@ public class Board {
 	private Set<BoardCell> targets = new HashSet<BoardCell>();
 	private Set<BoardCell> visited = new HashSet<BoardCell>();
 	private BoardCell startingPoint  = null;
-	public Board() {
-		numRows = 25;
-		numColumns = 25;
+	
+	public Board(String layoutFile) throws FileNotFoundException, BadConfigFormatException {
+		loadBoardDimensions(layoutFile);
 		layout = new BoardCell[numRows][numColumns];
 	}
 	
-	public Board(int rows, int cols) {
-		numRows = rows;
-		numColumns = cols;
-		layout = new BoardCell[numRows][numColumns];
+	public void loadBoardDimensions(String layoutFile) throws BadConfigFormatException, FileNotFoundException {
+		FileReader reader = new FileReader(layoutFile);
+		Scanner scan = new Scanner(reader);
+		String temp;
+		int lineCount = 0;
+		int cellCount = 0;
+		temp = scan.nextLine();
+		lineCount++;
+		String[] tempLine = temp.split(",");
+		cellCount = tempLine.length;
+		while( scan.hasNextLine() ) {
+			lineCount++;
+			if( scan.hasNextLine() ) scan.nextLine();
+		}
+		numRows = lineCount;
+		numColumns = cellCount;
+		System.out.println("loaded board as rows: " + numRows + " & columns: " + numColumns);
 	}
 	
 	public void loadBoardConfig(String layoutFile) throws BadConfigFormatException, FileNotFoundException {
 			//load board layout
+			String walkWayChar = "h";
+			if( layoutFile.contains("Rader") ) walkWayChar = "w";
+			
 			FileReader reader = new FileReader(layoutFile);
 			Scanner scan = new Scanner(reader);
 			String temp;
@@ -52,7 +68,6 @@ public class Board {
 					if( tempLine[j].length() > 1 ) {
 						if( tempLine[j].charAt(1) == 'U' || tempLine[j].charAt(1) == 'D' || 
 							tempLine[j].charAt(1) == 'L' || tempLine[j].charAt(1) == 'R' ) {
-							//System.out.println("Doorway: " + tempLine[j].charAt(0) + "|" + tempLine[j].charAt(1));
 							tempDir = tempLine[j].charAt(1);
 							layout[i][j] = new RoomCell(i, j, tempLine[j].charAt(0), tempDir);
 							System.out.println("doorway" + layout[i][j].toString());
@@ -61,7 +76,7 @@ public class Board {
 					}
 					
 					//if it is a walkway/hallway...
-					if( tempLine[j].equalsIgnoreCase("h") ) {
+					if( tempLine[j].equalsIgnoreCase(walkWayChar) ) {
 						
 						layout[i][j] = new WalkwayCell(i, j);
 						System.out.println("walkway" + layout[i][j].toString());
@@ -146,20 +161,26 @@ public class Board {
 		LinkedList<BoardCell> temp = getAdjList(cell);
 
 		if( temp != null ) {
+			//remove any cells that are already marked
+			for (BoardCell cell2 : temp) {
+				if( visited.contains(cell) || targets.contains(cell2) ) temp.remove(cell2);
+			}
+			
 			for (BoardCell adj : temp) {	
-				visited.add(adj);
 				// If no more moves remain, return the potential targets.
 				if(diceRoll == 1){
-					System.out.println("Adding: " + adj.toString() + " on account of no moves left");
-					targets.add(adj);
+					//System.out.println("Adding: " + adj.toString() + " on account of no moves left");
+					if( !targets.contains(adj) && !visited.contains(adj)) targets.add(adj);
 				}
 				// Recursively find adjacent cells for each next cell.	Handles going to doorways with a higher roll than is needed properly.	
 				else {
-					System.out.println("recursing");
+					visited.add(adj);
+					//System.out.println("recursing");
 					if( adj.isDoorway() ) {
 						targets.add(adj);
-						System.out.println("added special case: " + adj.toString());
+						//System.out.println("added special case: " + adj.toString());
 					}
+					
 					findAllTargets (adj, diceRoll - 1);
 				}
 				visited.remove(adj);
