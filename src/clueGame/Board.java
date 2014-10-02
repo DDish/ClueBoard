@@ -38,13 +38,15 @@ public class Board {
 		lineCount++;
 		String[] tempLine = temp.split(",");
 		cellCount = tempLine.length;
+		temp = scan.nextLine();
+		lineCount++;
 		while( scan.hasNextLine() ) {
 			lineCount++;
 			if( scan.hasNextLine() ) {
 				scan.nextLine();
-				String[] tempLine2 = temp.split(",");
+				/*String[] tempLine2 = temp.split(",");
 				cellCount2 = tempLine2.length;
-				if (cellCount2 != cellCount) throw new BadConfigFormatException();
+				if (cellCount2 != cellCount) throw new BadConfigFormatException();*/
 		}
 		}
 		numRows = lineCount;
@@ -67,10 +69,13 @@ public class Board {
 			if(temp.length() < (numColumns*2 - 1)) throw new BadConfigFormatException();
 			if(layoutFile.contains("Rader") && numColumns != 23) throw new BadConfigFormatException();
 			if(!layoutFile.contains("Rader") && numColumns != 25) throw new BadConfigFormatException();
+			
+			String[] firstTempLine = temp.split(",");
 			for( int i = 0; i < numRows; i++ ) {
 				String[] tempLine = temp.split(",");
+				if (firstTempLine.length != tempLine.length) throw new BadConfigFormatException();
 				//System.out.println("__________________row line __________________");
-				for( int j = 0; j < numColumns; j++ ) {
+				for( int j = 0; j < tempLine.length; j++ ) {
 					roomMade = false;
 					//next check if this is a doorway in a room and handle
 					if(!rooms.containsKey(tempLine[j].charAt(0))) throw new BadConfigFormatException();
@@ -83,7 +88,7 @@ public class Board {
 							roomMade = true;
 						}
 					}
-					
+				
 					//if it is a walkway/hallway...
 					if( tempLine[j].equalsIgnoreCase(walkWayChar) ) {
 						
@@ -146,32 +151,6 @@ public class Board {
 					if (j!=0) if(getBoardCell(i, j-1).isWalkway() || (getBoardCell(i, j-1).isDoorway() && getRoomCell(i,j-1).getDoorDirection() == DoorDirection.RIGHT)) adjacents.add(getBoardCell(i,j-1));
 					adjLists.put(getBoardCell(i,j), adjacents);
 				}
-				/*if( getBoardCell(i, j).isWalkway() ) {
-					if (i!=numRows-1) {
-						if(getBoardCell(i+1, j).isWalkway()) adjacents.add(getBoardCell(i+1,j));
-						else if (getBoardCell(i+1,j).isDoorway()) { 
-							if(getRoomCell(i+1, j).getDoorDirection() == DoorDirection.UP) adjacents.add(getBoardCell(i+1,j)); 
-						}
-					}
-					if (j!=numColumns-1) {
-						if(getBoardCell(i, j+1).isWalkway()) adjacents.add(getBoardCell(i,j+1));
-						else if( getBoardCell(i,j+1).isDoorway()) {
-							if(getRoomCell(i, j+1).getDoorDirection() == DoorDirection.LEFT) adjacents.add(getBoardCell(i,j+1)); 
-						}
-					}
-					if (i!=0) {
-						if(getBoardCell(i-1, j).isWalkway()) adjacents.add(getBoardCell(i-1,j));
-						else if (getBoardCell(i-1,j).isDoorway()) { 
-							if(getRoomCell(i-1, j).getDoorDirection() == DoorDirection.DOWN) adjacents.add(getBoardCell(i-1,j)); 
-						}
-					}
-					if (j!=0) {
-						if(getBoardCell(i, j-1).isWalkway()) adjacents.add(getBoardCell(i,j-1));
-						else if( getBoardCell(i,j-1).isDoorway()) {
-							if(getRoomCell(i, j-1).getDoorDirection() == DoorDirection.LEFT) adjacents.add(getBoardCell(i,j-1)); 
-						}
-					}
-				}*/
 				//if doorway, only one adjacency exists
 				if( getBoardCell(i, j).isDoorway() ) {
 					if (i!=numRows-1) if(getRoomCell(i, j).getDoorDirection() == DoorDirection.DOWN) adjacents.add(getBoardCell(i+1,j));
