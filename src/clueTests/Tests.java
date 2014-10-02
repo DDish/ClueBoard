@@ -316,7 +316,6 @@ public class Tests {
 					BoardCell cell = board.getBoardCell(1, 16);
 					board.calcTargets(cell, 4);
 					Set targets = board.getTargets();
-					for( Object dicks : targets ) System.out.println(dicks.toString());
 					Assert.assertEquals(13, targets.size());
 					Assert.assertTrue(targets.contains(board.getBoardCell(1, 18)));
 					Assert.assertTrue(targets.contains(board.getBoardCell(2, 18)));//
@@ -390,13 +389,14 @@ public class Tests {
 					BoardCell cell = board.getBoardCell(23, 12);
 					board.calcTargets(cell, 4);
 					Set targets = board.getTargets();
-					Assert.assertEquals(6, targets.size());
+					Assert.assertEquals(7, targets.size());
 					Assert.assertTrue(targets.contains(board.getBoardCell(24, 13)));
 					Assert.assertTrue(targets.contains(board.getBoardCell(21, 14)));
 					Assert.assertTrue(targets.contains(board.getBoardCell(22, 13)));
 					Assert.assertTrue(targets.contains(board.getBoardCell(20, 13)));
 					Assert.assertTrue(targets.contains(board.getBoardCell(23, 14)));
 					Assert.assertTrue(targets.contains(board.getBoardCell(22, 15)));
+					Assert.assertTrue(targets.contains(board.getBoardCell(24, 12)));
 				}//*/
 }
 

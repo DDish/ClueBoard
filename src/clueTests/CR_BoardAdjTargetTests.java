@@ -153,6 +153,7 @@ public class CR_BoardAdjTargetTests {
 		// Test on walkway next to  door that is not in the needed
 		// direction to enter
 		testList = board.getAdjList(5, 3);
+		System.out.println(testList.toString());
 		Assert.assertTrue(testList.contains(board.getBoardCell(5, 2)));
 		Assert.assertTrue(testList.contains(board.getBoardCell(5, 4)));
 		Assert.assertTrue(testList.contains(board.getBoardCell(6, 3)));

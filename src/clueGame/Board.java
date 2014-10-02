@@ -19,7 +19,9 @@ public class Board {
 	private Map<BoardCell, LinkedList<BoardCell>> adjLists = new HashMap<>();
 	private Set<BoardCell> targets = new HashSet<BoardCell>();
 	private Set<BoardCell> visited = new HashSet<BoardCell>();
+	private LinkedList<BoardCell> path = new LinkedList<BoardCell>();
 	private BoardCell startingPoint  = null;
+	private int iterations = 0;
 	
 	public Board(String layoutFile) throws FileNotFoundException, BadConfigFormatException {
 		loadBoardDimensions(layoutFile);
@@ -42,7 +44,7 @@ public class Board {
 		}
 		numRows = lineCount;
 		numColumns = cellCount;
-		System.out.println("loaded board as rows: " + numRows + " & columns: " + numColumns);
+		// System.out.println("loaded board as rows: " + numRows + " & columns: " + numColumns);
 	}
 	
 	public void loadBoardConfig(String layoutFile) throws BadConfigFormatException, FileNotFoundException {
@@ -70,7 +72,7 @@ public class Board {
 							tempLine[j].charAt(1) == 'L' || tempLine[j].charAt(1) == 'R' ) {
 							tempDir = tempLine[j].charAt(1);
 							layout[i][j] = new RoomCell(i, j, tempLine[j].charAt(0), tempDir);
-							System.out.println("doorway" + layout[i][j].toString());
+							//System.out.println("doorway" + layout[i][j].toString());
 							roomMade = true;
 						}
 					}
@@ -79,7 +81,7 @@ public class Board {
 					if( tempLine[j].equalsIgnoreCase(walkWayChar) ) {
 						
 						layout[i][j] = new WalkwayCell(i, j);
-						System.out.println("walkway" + layout[i][j].toString());
+						//System.out.println("walkway" + layout[i][j].toString());
 						roomMade = true;
 					}
 					
@@ -87,7 +89,7 @@ public class Board {
 					if( !roomMade ) {
 						//System.out.println("else: " + tempLine[j].charAt(0));
 						layout[i][j] = new RoomCell(i, j, tempLine[j].charAt(0));
-						System.out.println("room" + layout[i][j].toString());
+						//System.out.println("room" + layout[i][j].toString());
 					}
 				}
 				//read next line if it's allowed
@@ -126,6 +128,9 @@ public class Board {
 			for(int j = 0; j < numColumns; j++) {
 				LinkedList<BoardCell> adjacents = new LinkedList<BoardCell>();
 				//first ensure we are checking a doorway or walkway to start from
+				if( getBoardCell(i,j).isRoom()) {
+					
+				}
 				if( getBoardCell(i, j).isWalkway() ) {
 					if (i!=numRows-1) if(getBoardCell(i+1, j).isWalkway() || getBoardCell(i+1, j).isDoorway()) adjacents.add(getBoardCell(i+1,j));
 					if (j!=numColumns-1) if(getBoardCell(i, j+1).isWalkway() || getBoardCell(i, j+1).isDoorway()) adjacents.add(getBoardCell(i,j+1));
@@ -133,6 +138,32 @@ public class Board {
 					if (j!=0) if(getBoardCell(i, j-1).isWalkway() || getBoardCell(i, j-1).isDoorway()) adjacents.add(getBoardCell(i,j-1));
 					adjLists.put(getBoardCell(i,j), adjacents);
 				}
+				/*if( getBoardCell(i, j).isWalkway() ) {
+					if (i!=numRows-1) {
+						if(getBoardCell(i+1, j).isWalkway()) adjacents.add(getBoardCell(i+1,j));
+						else if (getBoardCell(i+1,j).isDoorway()) { 
+							if(getRoomCell(i+1, j).getDoorDirection() == DoorDirection.UP) adjacents.add(getBoardCell(i+1,j)); 
+						}
+					}
+					if (j!=numColumns-1) {
+						if(getBoardCell(i, j+1).isWalkway()) adjacents.add(getBoardCell(i,j+1));
+						else if( getBoardCell(i,j+1).isDoorway()) {
+							if(getRoomCell(i, j+1).getDoorDirection() == DoorDirection.LEFT) adjacents.add(getBoardCell(i,j+1)); 
+						}
+					}
+					if (i!=0) {
+						if(getBoardCell(i-1, j).isWalkway()) adjacents.add(getBoardCell(i-1,j));
+						else if (getBoardCell(i-1,j).isDoorway()) { 
+							if(getRoomCell(i-1, j).getDoorDirection() == DoorDirection.DOWN) adjacents.add(getBoardCell(i-1,j)); 
+						}
+					}
+					if (j!=0) {
+						if(getBoardCell(i, j-1).isWalkway()) adjacents.add(getBoardCell(i,j-1));
+						else if( getBoardCell(i,j-1).isDoorway()) {
+							if(getRoomCell(i, j-1).getDoorDirection() == DoorDirection.LEFT) adjacents.add(getBoardCell(i,j-1)); 
+						}
+					}
+				}*/
 				//if doorway, only one adjacency exists
 				if( getBoardCell(i, j).isDoorway() ) {
 					if (i!=numRows-1) if(getRoomCell(i, j).getDoorDirection() == DoorDirection.DOWN) adjacents.add(getBoardCell(i+1,j));
@@ -148,45 +179,44 @@ public class Board {
 	
 	public void calcTargets(BoardCell cell, int diceRoll) {
 		startingPoint = cell;
+		visited.clear();
+		visited.add(startingPoint);
+		targets.clear();
 		findAllTargets(cell, diceRoll);
 	}
 	
 	public void calcTargets(int i, int j, int diceRoll) {
 		startingPoint = getBoardCell(i, j);
+		visited.clear();
+		visited.add(startingPoint);
+		targets.clear();
 		findAllTargets(startingPoint, diceRoll);
 	}
 	
 	public void findAllTargets(BoardCell cell, int diceRoll) {
-		//get adjcells to cell
 		LinkedList<BoardCell> temp = getAdjList(cell);
-
-		if( temp != null ) {
-			//remove any cells that are already marked
-			for (BoardCell cell2 : temp) {
-				if( visited.contains(cell) || targets.contains(cell2) ) temp.remove(cell2);
-			}
-			
-			for (BoardCell adj : temp) {	
-				// If no more moves remain, return the potential targets.
-				if(diceRoll == 1){
-					//System.out.println("Adding: " + adj.toString() + " on account of no moves left");
-					if( !targets.contains(adj) && !visited.contains(adj)) targets.add(adj);
-				}
-				// Recursively find adjacent cells for each next cell.	Handles going to doorways with a higher roll than is needed properly.	
-				else {
-					visited.add(adj);
-					//System.out.println("recursing");
-					if( adj.isDoorway() ) {
-						targets.add(adj);
-						//System.out.println("added special case: " + adj.toString());
-					}
-					
-					findAllTargets (adj, diceRoll - 1);
-				}
-				visited.remove(adj);
-			}
+		LinkedList<BoardCell> notYetVisited = new LinkedList<BoardCell>();
+		for(BoardCell adj : temp) {
+			if(!visited.contains(adj)) notYetVisited.add(adj);
 		}
-
+		for(BoardCell adj : notYetVisited) {
+			if(adj.isDoorway() && !targets.contains(adj)) targets.add(adj);
+			System.out.println("Targets: " + targets.toString());
+		}
+		
+		for(BoardCell adj : notYetVisited) {
+			visited.add(adj);
+			System.out.println("Iterations: " + iterations);
+			System.out.println("Visited: " + visited.toString());
+			if(diceRoll == 1) {
+				if (!targets.contains(adj)) targets.add(adj);
+				System.out.println("Targets: " + targets.toString());
+			}
+			else {
+				findAllTargets(adj,diceRoll-1);				
+		}
+			visited.remove(adj);
+		}
 	}
 
 	public Set<BoardCell> getTargets() {
